@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "smart-wallet-expo",
-    "slug": "smart-wallet-expo",
+    "name": "Ethermural",
+    "slug": "ether-mural",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -11,16 +11,25 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.vorcigernix.ethermural"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.vorcigernix.ethermural"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "scheme": "ethermural",
+    "extra": {
+      "eas": {
+        "projectId": "849ba20d-0900-4f6c-8bfc-0cf5398c8be2"
+      }
+    },
+    "owner": "vorcigernix"
   }
 }
