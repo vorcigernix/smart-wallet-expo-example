@@ -8,108 +8,68 @@ import { useEffect, useMemo } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { handleResponse } from "@mobile-wallet-protocol/client";
 import { NavigationContainer } from "@react-navigation/native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { View, StyleSheet, useColorScheme, ScrollView, Platform } from 'react-native';
+import { createBottomTabNavigator, BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import { View, useColorScheme } from 'react-native';
 import { CommonActions } from '@react-navigation/native';
-import { Text, BottomNavigation, useTheme } from 'react-native-paper';
+import { Text, BottomNavigation, useTheme, Button } from 'react-native-paper';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { Card, MD3DarkTheme, MD3LightTheme, Provider as PaperProvider } from 'react-native-paper';
-import WagmiDemo, { config } from "./src/wagmiDemo";
+import { MD3DarkTheme, MD3LightTheme, Provider as PaperProvider } from 'react-native-paper';
+import { config } from "./src/wagmiDemo";
+import DetailScreen from "./src/components/DetailScreen";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { RootTabParamList, HomeStackParamList } from './types';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import HomeScreenContent from "./src/components/HomeScreen";
+import { styles } from "./styles";
+
 
 const queryClient = new QueryClient();
-const Tab = createBottomTabNavigator();
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  content: {
-    padding: 4,
-  },
-  card: {
-    margin: 4,
-  },
-  screenContainer: {
-    flex: 1,
-  }
-});
+const Stack = createNativeStackNavigator<HomeStackParamList>();
+const Tab = createBottomTabNavigator<RootTabParamList>();
 
-function HomeScreen() {
+function HomeStack() {
   const theme = useTheme();
-  const insets = useSafeAreaInsets();
-  
   return (
-    <View 
-      style={[
-        styles.screenContainer, 
-        { 
-          backgroundColor: theme.colors.background,
-          paddingTop: insets.top
-        }
-      ]}
-    >
-      <ScrollView style={styles.container}>
-        <View style={styles.content}>
-          <Card style={styles.card} mode='contained'>
-            <Card.Cover
-              source={{ uri: 'https://picsum.photos/700' }}
-            />
-            <Card.Title title="Abandoned Ship" />
-            <Card.Content>
-              <Text variant="bodyMedium">
-                The Abandoned Ship is a wrecked ship located on Route 108 in
-                Hoenn, originally being a ship named the S.S. Cactus. The second
-                part of the ship can only be accessed by using Dive and contains
-                the Scanner.
-              </Text>
-            </Card.Content>
-          </Card>
-          <Card style={styles.card} mode='contained'>
-            <Card.Cover
-              source={{ uri: 'https://picsum.photos/701' }}
-            />
-            <Card.Title title="Abandoned Ship" />
-            <Card.Content>
-              <Text variant="bodyMedium">
-                The Abandoned Ship is a wrecked ship located on Route 108 in
-                Hoenn, originally being a ship named the S.S. Cactus. The second
-                part of the ship can only be accessed by using Dive and contains
-                the Scanner.
-              </Text>
-            </Card.Content>
-          </Card>
-          <Card style={styles.card} mode='contained'>
-            <Card.Cover
-              source={{ uri: 'https://picsum.photos/704' }}
-            />
-            <Card.Title title="Abandoned Ship" />
-            <Card.Content>
-              <Text variant="bodyMedium">
-                The Abandoned Ship is a wrecked ship located on Route 108 in
-                Hoenn, originally being a ship named the S.S. Cactus. The second
-                part of the ship can only be accessed by using Dive and contains
-                the Scanner.
-              </Text>
-            </Card.Content>
-          </Card>
-          {/* Other cards... */}
-        </View>
-      </ScrollView>
-    </View>
+    <Stack.Navigator>
+      <Stack.Screen
+        name="HomeScreen"
+        component={HomeScreenContent}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Detail"
+        component={DetailScreen}
+        options={({ route }) => ({
+          title: "",
+          headerTransparent: true,
+          headerTitleContainerStyle: {bottom:10},
+          headerTintColor: theme.colors.onSurface,
+          headerRight: () => (
+            <Button
+              mode="contained"
+              onPress={() => console.log('Mint pressed')}
+              style={{ marginRight: 10 }}
+            >
+              Mint ${route.params.price}
+            </Button>
+          ),
+        })}
+      />
+    </Stack.Navigator>
   );
 }
 
 function SettingsScreen() {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
-  
+
   return (
-    <View 
+    <View
       style={[
-        styles.screenContainer, 
-        { 
+        styles.screenContainer,
+        {
           backgroundColor: theme.colors.background,
           paddingTop: insets.top
         }
@@ -139,9 +99,9 @@ export default function App() {
 
   const paperTheme = useMemo(
     () =>
-      colorScheme === 'dark' 
-        ? { ...MD3DarkTheme, colors: { ...MD3DarkTheme.colors, ...theme.dark }} 
-        : { ...MD3LightTheme, colors: { ...MD3LightTheme.colors, ...theme.light }},
+      colorScheme === 'dark'
+        ? { ...MD3DarkTheme, colors: { ...MD3DarkTheme.colors, ...theme.dark } }
+        : { ...MD3LightTheme, colors: { ...MD3LightTheme.colors, ...theme.light } },
     [colorScheme, theme]
   );
 
@@ -151,10 +111,10 @@ export default function App() {
         <QueryClientProvider client={queryClient}>
           <PaperProvider theme={paperTheme}>
             <NavigationContainer>
-              <StatusBar 
+              <StatusBar
                 translucent={true}
                 backgroundColor="transparent"
-                style={colorScheme === 'dark' ? "light" : "dark"} 
+                style={colorScheme === 'dark' ? "light" : "dark"}
               />
               <Tab.Navigator
                 screenOptions={{
@@ -193,7 +153,7 @@ export default function App() {
               >
                 <Tab.Screen
                   name="Selection"
-                  component={HomeScreen}
+                  component={HomeStack}
                   options={{
                     tabBarIcon: ({ color, size }) => {
                       return <MaterialIcons name="panorama-photosphere" size={size} color={color} />;
