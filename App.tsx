@@ -21,7 +21,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RootTabParamList, HomeStackParamList } from './types';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreenContent from "./src/components/HomeScreen";
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { styles } from "./styles";
+
 
 
 const queryClient = new QueryClient();
@@ -107,6 +109,7 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
       <WagmiProvider config={config}>
         <QueryClientProvider client={queryClient}>
           <PaperProvider theme={paperTheme}>
@@ -183,6 +186,7 @@ export default function App() {
           </PaperProvider>
         </QueryClientProvider>
       </WagmiProvider>
+      </GestureHandlerRootView>
     </SafeAreaProvider>
   );
 }
