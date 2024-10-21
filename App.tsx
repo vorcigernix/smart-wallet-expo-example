@@ -11,7 +11,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator, BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { View, useColorScheme } from 'react-native';
 import { CommonActions } from '@react-navigation/native';
-import { Text, BottomNavigation, useTheme, Button } from 'react-native-paper';
+import { Text, BottomNavigation, useTheme, Button, IconButton } from 'react-native-paper';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { MD3DarkTheme, MD3LightTheme, Provider as PaperProvider } from 'react-native-paper';
@@ -23,6 +23,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreenContent from "./src/components/HomeScreen";
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { styles } from "./styles";
+import AuthorsListScreen from "./src/components/AuthorsListScreen";
 
 
 
@@ -34,7 +35,25 @@ const Tab = createBottomTabNavigator<RootTabParamList>();
 function HomeStack() {
   const theme = useTheme();
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={({ navigation }) => ({
+        headerTransparent: true,
+        headerTitle: '',
+        headerLeft: () => (
+          <IconButton
+            icon="arrow-left"
+            iconColor={theme.colors.surface}
+            size={24}
+            style={{
+              margin: 10,
+              borderRadius: 20,
+              backgroundColor: theme.colors.primary,
+            }}
+            onPress={() => navigation.goBack()}
+          />
+        ),
+      })}
+    >
       <Stack.Screen
         name="HomeScreen"
         component={HomeScreenContent}
@@ -46,8 +65,9 @@ function HomeStack() {
         options={({ route }) => ({
           title: "",
           headerTransparent: true,
-          headerTitleContainerStyle: {bottom:10},
+          headerTitleContainerStyle: { bottom: 10 },
           headerTintColor: theme.colors.onSurface,
+
           headerRight: () => (
             <Button
               mode="contained"
@@ -59,6 +79,19 @@ function HomeStack() {
           ),
         })}
       />
+    </Stack.Navigator>
+  );
+}
+
+function DesignersStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="AuthorsList"
+        component={AuthorsListScreen}
+        options={{ headerShown: false }}
+      />
+      {/* Add AuthorPictures screen here when implemented */}
     </Stack.Navigator>
   );
 }
@@ -110,82 +143,82 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <GestureHandlerRootView style={{ flex: 1 }}>
-      <WagmiProvider config={config}>
-        <QueryClientProvider client={queryClient}>
-          <PaperProvider theme={paperTheme}>
-            <NavigationContainer>
-              <StatusBar
-                translucent={true}
-                backgroundColor="transparent"
-                style={colorScheme === 'dark' ? "light" : "dark"}
-              />
-              <Tab.Navigator
-                screenOptions={{
-                  headerShown: false,
-                }}
-                tabBar={({ navigation, state, descriptors, insets }) => (
-                  <BottomNavigation.Bar
-                    navigationState={state}
-                    safeAreaInsets={insets}
-                    onTabPress={({ route, preventDefault }) => {
-                      const event = navigation.emit({
-                        type: 'tabPress',
-                        target: route.key,
-                        canPreventDefault: true,
-                      });
-
-                      if (event.defaultPrevented) {
-                        preventDefault();
-                      } else {
-                        navigation.dispatch({
-                          ...CommonActions.navigate(route.name, route.params),
-                          target: state.key,
+        <WagmiProvider config={config}>
+          <QueryClientProvider client={queryClient}>
+            <PaperProvider theme={paperTheme}>
+              <NavigationContainer>
+                <StatusBar
+                  translucent={true}
+                  backgroundColor="transparent"
+                  style={colorScheme === 'dark' ? "light" : "dark"}
+                />
+                <Tab.Navigator
+                  screenOptions={{
+                    headerShown: false,
+                  }}
+                  tabBar={({ navigation, state, descriptors, insets }) => (
+                    <BottomNavigation.Bar
+                      navigationState={state}
+                      safeAreaInsets={insets}
+                      onTabPress={({ route, preventDefault }) => {
+                        const event = navigation.emit({
+                          type: 'tabPress',
+                          target: route.key,
+                          canPreventDefault: true,
                         });
+
+                        if (event.defaultPrevented) {
+                          preventDefault();
+                        } else {
+                          navigation.dispatch({
+                            ...CommonActions.navigate(route.name, route.params),
+                            target: state.key,
+                          });
+                        }
+                      }}
+                      renderIcon={({ route, focused, color }) =>
+                        descriptors[route.key].options.tabBarIcon?.({
+                          focused,
+                          color,
+                          size: 24,
+                        }) || null
                       }
+                      getLabelText={({ route }) => descriptors[route.key].route.name}
+                    />
+                  )}
+                >
+                  <Tab.Screen
+                    name="Selection"
+                    component={HomeStack}
+                    options={{
+                      tabBarIcon: ({ color, size }) => {
+                        return <MaterialIcons name="panorama-photosphere" size={size} color={color} />;
+                      },
                     }}
-                    renderIcon={({ route, focused, color }) =>
-                      descriptors[route.key].options.tabBarIcon?.({
-                        focused,
-                        color,
-                        size: 24,
-                      }) || null
-                    }
-                    getLabelText={({ route }) => descriptors[route.key].route.name}
                   />
-                )}
-              >
-                <Tab.Screen
-                  name="Selection"
-                  component={HomeStack}
-                  options={{
-                    tabBarIcon: ({ color, size }) => {
-                      return <MaterialIcons name="panorama-photosphere" size={size} color={color} />;
-                    },
-                  }}
-                />
-                <Tab.Screen
-                  name="Authors"
-                  component={SettingsScreen}
-                  options={{
-                    tabBarIcon: ({ color, size }) => {
-                      return <MaterialCommunityIcons name="book-account-outline" size={size} color={color} />;
-                    },
-                  }}
-                />
-                <Tab.Screen
-                  name="Account"
-                  component={SettingsScreen}
-                  options={{
-                    tabBarIcon: ({ color, size }) => {
-                      return <MaterialCommunityIcons name="account-cog-outline" size={size} color={color} />;
-                    },
-                  }}
-                />
-              </Tab.Navigator>
-            </NavigationContainer>
-          </PaperProvider>
-        </QueryClientProvider>
-      </WagmiProvider>
+                  <Tab.Screen
+                    name="Designers"
+                    component={DesignersStack}
+                    options={{
+                      tabBarIcon: ({ color, size }) => {
+                        return <MaterialCommunityIcons name="book-account-outline" size={size} color={color} />;
+                      },
+                    }}
+                  />
+                  <Tab.Screen
+                    name="Account"
+                    component={SettingsScreen}
+                    options={{
+                      tabBarIcon: ({ color, size }) => {
+                        return <MaterialCommunityIcons name="account-cog-outline" size={size} color={color} />;
+                      },
+                    }}
+                  />
+                </Tab.Navigator>
+              </NavigationContainer>
+            </PaperProvider>
+          </QueryClientProvider>
+        </WagmiProvider>
       </GestureHandlerRootView>
     </SafeAreaProvider>
   );

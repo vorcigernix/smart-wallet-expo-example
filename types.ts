@@ -11,10 +11,12 @@ export interface CardItem {
 export type HomeStackParamList = {
     HomeScreen: undefined;
     Detail: Omit<CardItem, 'navigation'>;
+    AuthorsList: undefined;
+    AuthorPictures: { author: string };
 };
 
 export type RootTabParamList = {
     Selection: undefined;
-    Authors: undefined;
+    Designers: undefined;
     Account: undefined;
 };

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card as PaperCard, Text } from 'react-native-paper';
+import { Card as PaperCard, Paragraph, Text } from 'react-native-paper';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { CardItem, HomeStackParamList } from '../../types';
 import { cardstyles } from '../../styles';
@@ -31,7 +31,8 @@ const CustomCard: React.FC<CustomCardProps> = ({ item, navigation }) => {
       <PaperCard.Cover source={{ uri: imageUrl }} />
       <PaperCard.Title title={title} />
       <PaperCard.Content>
-        <Text variant="bodyMedium">{description}</Text>
+        <Paragraph numberOfLines={4} ellipsizeMode="tail"><Text variant="bodyMedium">{description}</Text></Paragraph>
+
       </PaperCard.Content>
     </PaperCard>
   );
