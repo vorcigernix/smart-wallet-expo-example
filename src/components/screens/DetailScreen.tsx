@@ -2,33 +2,27 @@ import React from 'react';
 import { View, Image, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import { Avatar, Surface, Text, useTheme } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RouteProp, useNavigation } from '@react-navigation/native';
-import { HomeStackParamList } from '../../types';
+import { HomeStackParamList } from '../../../types';
 import Animated, {
     useSharedValue,
     useAnimatedStyle,
     withSpring,
     interpolate,
     Extrapolation,
-    useDerivedValue,
-    runOnJS,
 } from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-type DetailScreenProps = {
-    route: RouteProp<HomeStackParamList, 'Detail'>;
-};
+type DetailScreenProps = NativeStackScreenProps<HomeStackParamList, 'Detail'>;
 
 const { height, width } = Dimensions.get('window');
 const MIN_TRANSLATE_Y = -height + 200;
 const MAX_TRANSLATE_Y = -height * 0.3;
 
-const DetailScreen = ({ route }: DetailScreenProps) => {
+const DetailScreen: React.FC<DetailScreenProps> = ({ route, navigation }) => {
     const theme = useTheme();
     const insets = useSafeAreaInsets();
     const { description, imageUrl, author, title } = route.params;
-    const navigation = useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
     const translateY = useSharedValue(MAX_TRANSLATE_Y);
     const context = useSharedValue({ y: 0 });
 
@@ -70,9 +64,7 @@ const DetailScreen = ({ route }: DetailScreenProps) => {
     });
 
     const handleAuthorPress = () => {
-        // Navigate to author's pictures list
-        //navigation.navigate('AuthorPictures', { author });
-        console.log("Author clicked");
+        navigation.navigate('AuthorPictures', { author });
     };
 
     return (

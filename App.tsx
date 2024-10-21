@@ -16,14 +16,15 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { MD3DarkTheme, MD3LightTheme, Provider as PaperProvider } from 'react-native-paper';
 import { config } from "./src/wagmiDemo";
-import DetailScreen from "./src/components/DetailScreen";
+import DetailScreen from "./src/components/screens/DetailScreen";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RootTabParamList, HomeStackParamList } from './types';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import HomeScreenContent from "./src/components/HomeScreen";
+import HomeScreenContent from "./src/components/screens/HomeScreen";
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { styles } from "./styles";
-import AuthorsListScreen from "./src/components/AuthorsListScreen";
+import AuthorsListScreen from "./src/components/screens/AuthorsListScreen";
+import AuthorPicturesScreen from "./src/components/screens/AuthorPicturesScreen";
 
 
 
@@ -84,6 +85,7 @@ function HomeStack() {
 }
 
 function DesignersStack() {
+  const theme = useTheme();
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -91,7 +93,20 @@ function DesignersStack() {
         component={AuthorsListScreen}
         options={{ headerShown: false }}
       />
-      {/* Add AuthorPictures screen here when implemented */}
+      <Stack.Screen
+        name="AuthorPictures"
+        component={AuthorPicturesScreen}
+        options={({ route }) => ({
+          title: route.params.author,
+          headerStyle: {
+            backgroundColor: theme.colors.surface,
+          },
+          headerTintColor: theme.colors.onSurface,
+          headerTitleStyle: {
+            color: theme.colors.onSurface,
+          },
+        })}
+      />
     </Stack.Navigator>
   );
 }

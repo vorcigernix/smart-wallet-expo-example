@@ -3,7 +3,7 @@ import { View, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { Avatar, Text, Surface, useTheme } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { HomeStackParamList } from '../../types';
+import { HomeStackParamList } from '../../../types';
 
 
 interface Author {

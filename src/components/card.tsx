@@ -1,17 +1,16 @@
 import React from 'react';
 import { Card as PaperCard, Paragraph, Text } from 'react-native-paper';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { CardItem, HomeStackParamList } from '../../types';
+import { CardItem, HomeStackNavigationProp } from '../../types';
 import { cardstyles } from '../../styles';
 
 interface CustomCardProps {
   item: CardItem;
-  navigation: StackNavigationProp<HomeStackParamList, 'HomeScreen'>;
+  navigation: HomeStackNavigationProp;
 }
+
 const CustomCard: React.FC<CustomCardProps> = ({ item, navigation }) => {
   const { id, title, description, imageUrl, author, price } = item;
   const handlePress = () => {
-    // Only pass serializable data
     navigation.navigate('Detail', {
       id,
       title,
@@ -32,7 +31,6 @@ const CustomCard: React.FC<CustomCardProps> = ({ item, navigation }) => {
       <PaperCard.Title title={title} />
       <PaperCard.Content>
         <Paragraph numberOfLines={4} ellipsizeMode="tail"><Text variant="bodyMedium">{description}</Text></Paragraph>
-
       </PaperCard.Content>
     </PaperCard>
   );

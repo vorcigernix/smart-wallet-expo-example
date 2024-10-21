@@ -1,4 +1,6 @@
 import { NavigatorScreenParams } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+
 export interface CardItem {
     id: string;
     title: string;
@@ -16,7 +18,9 @@ export type HomeStackParamList = {
 };
 
 export type RootTabParamList = {
-    Selection: undefined;
+    Selection: NavigatorScreenParams<HomeStackParamList>;
     Designers: undefined;
     Account: undefined;
 };
+
+export type HomeStackNavigationProp = NativeStackNavigationProp<HomeStackParamList>;
